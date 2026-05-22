@@ -53,8 +53,36 @@ const shortenUrl = async (req, res) => {
    }
 };
 
+/**
+ * @desc    Find a URL by its short code and redirect the user.
+ * @route   GET /:code
+ * @access  Public
+ */
+
+const redirectToUrl=async (req, res)=>{
+   try{
+    const url=await Url.findOne({urlCode:req.params.code});
+
+    if(url){
+        url.clicks++;
+        await url.save();
+       return res.redirect(301,url.longUrl);
+        
+    }else{
+        return res.status(404).json({
+            success:false,
+            message:'No URL found '
+        })
+    }
+
+   }catch(error){
+    console.error('Server Error on redirect:', error);
+    res.status(500).json({ success: false, error: 'Server error' });
+   }
+}
 
 
 module.exports= {
     shortenUrl,
+    redirectToUrl,
 };
