@@ -3,6 +3,7 @@ const express = require('express');
 const dotenv= require('dotenv');
 const urlRoutes= require('./routes/urls');
 const redirectRoutes= require('./routes/index');
+const authRoutes= require('./routes/auth');
 
 
 const app= express();
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
     });
 });
 app.use('/api',urlRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/', redirectRoutes);
 
 
