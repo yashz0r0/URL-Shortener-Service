@@ -41,12 +41,20 @@ const shortenUrl = async (req, res) => {
     const urlCode= nanoid.nanoid(4);
     const shortUrl= `${process.env.BASE_URL}/${urlCode}`;
 
-     url =await Url.create({
+    const newUrldata={
         longUrl,
         shortUrl,
         urlCode,
-     });
-     res.status(201).json({ success: true, data: url });
+    }
+
+    if(req.user){
+        newUrldata.user=req.user.id;
+    }
+
+    url=await Url.create(newUrldata);
+
+    res.status(201).json({ success: true, data: url });
+     
    }catch(error){
     console.error('Database Error:', error);
     res.status(500).json({ success: false, error: 'Server error' });
